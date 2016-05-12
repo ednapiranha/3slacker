@@ -1,0 +1,122 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, appvar, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Main styles */
+
+body {
+  background: linear-gradient(#763bd6 0%, #19fbf3 60%, #97dcab 100%);
+  background-attachment: fixed;
+}
+
+#wrapper {
+  padding: 2vw;
+  font-family: Arial;
+  max-width: 800px;
+  width: 96vw;
+}
+
+h1 {
+  color: #fff;
+  font-family: Rokkitt;
+  font-size: 2.2rem;
+  text-shadow: 1px 1px #79caa1;
+  transition: all 2s;
+  -webkit-transition: all 2s;
+  line-height: 2.5rem;
+  margin-bottom: 20px;
+}
+
+h1:hover {
+  text-shadow: 12px 162px #ed4a7c;
+  font-size: 2.4rem;
+  transition: all 2s;
+  -webkit-transition: all 2s;
+}
+
+.note {
+  font-size: 1rem;
+  line-height: 0.3rem;
+  transition: all 1.5s;
+  -webkit-transition: all 1.5s;
+  color: #555;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+}
+
+.note:hover {
+  font-size: 1.3rem;
+  line-height: 2rem;
+  transition: all 1.5s;
+  -webkit-transition: all 1.5s;
+  color: #111;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.instruction {
+  margin: 20px 0;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+a {
+  color: #222;
+  text-decoration: none;
+  text-shadow: 0 0 #79caa1;
+  transition: all .5s;
+  -webkit-transition: all .5s;
+}
+
+a:hover {
+  color: #fff;
+  text-shadow: 2px 2px #111;
+  transition: all .5s;
+  -webkit-transition: all .5s;
+}
