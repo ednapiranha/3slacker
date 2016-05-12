@@ -15,7 +15,6 @@ let controls;
 let renderer;
 let mesh;
 let line;
-let currentFont;
 let increase = true;
 
 // This is where we create the face for our bot and apply the image texture.
