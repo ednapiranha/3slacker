@@ -13,3 +13,7 @@ Also set up your [Open Weather API](http://openweathermap.org/appid) key (it's f
 Go to [http://localhost:3000](http://localhost:3000)
 
 Go to your Slack, invite the bot into a channel and interact with it!
+
+## License
+
+BSD 3-Clause
