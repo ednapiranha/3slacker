@@ -25,6 +25,20 @@ function sendResponse(data) {
     return;
   }
 
+  if (data.text.match(/butt/gi)) {
+    let butt = '( ＾◡＾)っ (‿|‿)';
+    sockets.emit('message', butt);
+    rtm.sendMessage(butt, data.channel);
+    return;
+  }
+
+  if (data.text.match(/(cat|kitty|kitten)(\W|\s|$)/gi)) {
+    let cat = ':neko-tubbs: :neko-tubbs: :neko-tubbs: ';
+    sockets.emit('message', cat);
+    rtm.sendMessage(cat, data.channel);
+    return;
+  }
+
   // Let's return a weather status for a particular zip code in the United States.
   if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
     if (data.text.match(/weather [0-9]+$/i)) {
@@ -51,6 +65,7 @@ rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, (data) => {
+  console.log(messageHistory)
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
     if (data.type === 'message') {
