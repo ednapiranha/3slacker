@@ -144,8 +144,12 @@ a:hover {
   -webkit-transition: opacity 1s;
 }
 
-video {
+video, img {
   width: 100%;
+}
+
+img {
+  max-width: 600px;
 }
 
 .video-wrapper:hover p {
@@ -196,4 +200,5 @@ pre {
   font-size: 1rem;
   line-height: 1.2rem;
   white-space: pre-wrap;
+  overflow: hidden;
 }

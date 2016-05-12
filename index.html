@@ -7,6 +7,16 @@
     <meta content="yes" name="apple-mobile-web-app-capable"/>
     <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/Rokkitt:500"/>
     <link rel="stylesheet" href="main.css"/>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-77657091-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
   </head>
   <body >
     <div id="wrapper">
@@ -148,10 +158,123 @@ function pulsate() {
 }</code></pre>
       <h2>Interacting with Slack messages</h2>
       <p class="instruction">Before someone tries to tell me you can do this all client-side and not need a server, yes that is true, but I did it this way so deal with it. And no, I am not going to rewrite this in yet another JavaScript framework - but YOU can if YOU are feeling up to it. Now that we have that situation sorted out, let's talk about how we send messages from Slack and Open Weather back and forth to the bot.</p>
-      <p class="instruction">We have two main parts: the web socket that sends data between the server and the client and the actions that talk to the external APIs. In the Slack messages, I have two main checks - one to see if the message was directed to the bot specifically (for the weather report) and one to see if anyone laughed. You can view it in <span>slackers/messages.js</span>.</p>
-<pre><code>
+      <p class="instruction">We have two main parts: the web socket that sends data between the server and the client and the actions that talk to the external APIs. In the Slack messages, I have two main checks - one to see if the message was directed to the bot specifically (for the weather report) and one to see if anyone laughed. You can view it in <span>slacker/messages.js</span>.</p>
+<pre><code>// This checks what kind of response to send depending on the regex we want to look for.
+function sendResponse(data) {
+  // Let's return a response back to the client if someone in the same channel as the bot says "lol" or
+  // "looool" or "LOOOOOOOOOOL" or any variant of that, or haha or hehe or HAHAHA or HEHEHEHE, etc.
+  if (data.text.match(/(lo{1,}l|haha|hehe)/gi)) {
+    sockets.emit('message', 'HAHAHAHAHHAHAHAHAHAHAHA!');
+    return;
+  }
 
+  // Let's return a weather status for a particular zip code in the United States.
+  if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
+    if (data.text.match(/weather [0-9]+$/i)) {
+      weather.getWeather(data, rtm, sockets);
+    }
+}</code></pre>
+      <p class="instruction">Let's say someone wrote "lol" on the Slack channel where the bot is. What our code will do is see that it is a match, and return a big laughing response on our page, instead of annoying the users on Slack with useless text.</p>
+      <img src="haha.jpg" />
+      <p class="instruction">In <span>public/js/main.js</span> we listen for the incoming socket 'message' to write our resposne on the page and fade it in.</p>
+<pre><code>// Incoming messages are appended into the page.
+socket.on('message', (data) => {
+  let div = document.createElement('div');
+  div.classList.add('message');
+  let p = document.createElement('p');
+  p.textContent = data;
+  div.appendChild(p);
+  div.classList.add('on');
+  wrapper.appendChild(div);
+});</code></pre>
+      <p class="instruction">Fading in is done via CSS in <span>public/css/main.css</span>.</p>
+<pre><code>.message {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  padding: 10px;
+}
+
+.message.on {
+  opacity: 1;
+  height: auto;
+  width: auto;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+}
 </code></pre>
+      <p class="instruction">Now let's say someone wrote "3slacker: weather 90210" or "@3slacker weather 90210" to get the weather report for Beverly Hills, California (in all likeliness, we never have to wonder what the weather report there is, because it's probably clear and sunny 99% of the time).</p>
+      <p class="instruction">What we need to do is pass the zip code to the Open Weather API and have them return us the weather code and we try to match an appropriate image for that status. In this app, I've simplified it to clear, rain, clouds, snow. After <span>sendResponse(data)</span> is called from <span>slacker/messages.js</span> and matches the weather keyword, we pass it off to <span>slacker/weather.js</span> to process. <span>rtm.sendMessage</span> will send it back as a response in the Slack channel.</p>
+<pre><code>// Send a request to Open Weather's API and return both a status to the client and also a message to
+// the Slack channel.
+exports.getWeather = function (data, rtm, sockets) {
+  let zip = data.text.split('weather ')[1];
+  request('http://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',us' +
+          '&amp;APPID=' + nconf.get('openWeatherKey'), (err, response, body) => {
+    if (!err &amp;&amp; response.statusCode === 200) {
+      let weather = JSON.parse(body).weather[0];
+      setWeather(weather.id, sockets);
+      rtm.sendMessage('Weather for ' + zip + ' is ' + weather.main, data.channel);
+    } else {
+      rtm.sendMessage('Error retrieving weather report', data.channel);
+    }
+  });
+};</code></pre>
+<pre><code>// Weather conditions taken from http://openweathermap.org/weather-conditions
+function setWeather(id, sockets) {
+  switch (id) {
+    case 500:
+    case 501:
+    case 502:
+    case 503:
+    case 504:
+    case 511:
+    case 520:
+    case 521:
+    case 522:
+    case 531:
+      sockets.emit('weather', 'rain');
+      break;
+    case 600:
+    case 601:
+    case 602:
+    case 611:
+    case 612:
+    case 615:
+    case 616:
+    case 620:
+    case 621:
+    case 622:
+      sockets.emit('weather', 'snow');
+      break;
+    case 801:
+    case 802:
+    case 803:
+    case 804:
+      sockets.emit('weather', 'clouds');
+      break;
+    case 800:
+      sockets.emit('weather', 'clear');
+      break;
+    default:
+      break;
+  }
+};</code></pre>
+      <p class="instruction">Now that we have the weather status, we can send a weather message back to the client-side. Open up <span>public/js/main.js</span> to see where it receives it and applies it into the page.</p>
+<pre><code>// Incoming weather statuses are matched by their respective images located in build/weather/.
+socket.on('weather', (data) => {
+  weather.classList.remove('on');
+
+  setTimeout(() => {
+    weather.src = '/weather/' + data + '.png';
+    weather.classList.add('on');
+  }, 1000);
+});</code></pre>
+      <p class="instruction">And finally, you get a sunny report for 90210:</p>
+      <img src="clear.jpg" />
+      <p class="instruction">There you have it. A ThreeJS Slack bot. Rather, the beginnings of one. What else do you think you could do to make it even more weird?</p>
     </div>
   </body>
 </html>
