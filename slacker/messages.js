@@ -17,7 +17,7 @@ let sockets;
 
 function sendResponse(data) {
   if (data.text.match(/(lo{1,}l|haha|hehe)/gi)) {
-    rtm.sendMessage('lol!', data.channel);
+    sockets.emit('message', 'HAHAHAHAHHAHAHAHAHAHAHA!');
     return;
   }
 

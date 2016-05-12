@@ -2,8 +2,6 @@
 
 require('../css/main.css');
 
-const moment = require('moment');
-
 const face = require('./face');
 const ws = require('./ws');
 
@@ -11,10 +9,6 @@ const socket = ws.getSocket();
 
 const wrapper = document.querySelector('#wrapper');
 const weather = document.querySelector('.weather');
-
-function setTime() {
-  return moment().format('LTS');
-}
 
 face.generate();
 
@@ -27,9 +21,6 @@ socket.on('message', (data) => {
   div.classList.add('message');
   let p = document.createElement('p');
   p.textContent = data;
-  let time = document.createElement('time');
-  time.textContent = setTime();
-  div.appendChild(time);
   div.appendChild(p);
   div.classList.add('on');
   wrapper.appendChild(div);

@@ -75,9 +75,11 @@ body {
 }
 
 p {
-  color: #fff;
-  font-size: 1.1rem;
+  color: #b7ea55;
+  text-shadow: 3px 3px #111;
+  font-size: 5.1rem;
   margin-bottom: 10px;
+  letter-spacing: 1px;
 }
 
 .weather {

@@ -36,6 +36,6 @@ module.exports = {
         warnings: false
       }
     }),
-    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment/, /three/])
+    new webpack.IgnorePlugin(/^\.\/locale$/, [/three/])
   ]
 };
