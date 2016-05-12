@@ -15,12 +15,16 @@ let uid;
 let username;
 let sockets;
 
+// This checks what kind of response to send depending on the regex we want to look for.
 function sendResponse(data) {
+  // Let's return a response back to the client if someone in the same channel as the bot says "lol" or
+  // "looool" or "LOOOOOOOOOOL" or any variant of that, or haha or hehe or HAHAHA or HEHEHEHE, etc.
   if (data.text.match(/(lo{1,}l|haha|hehe)/gi)) {
     sockets.emit('message', 'HAHAHAHAHHAHAHAHAHAHAHA!');
     return;
   }
 
+  // Let's return a weather status for a particular zip code in the United States.
   if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
     if (data.text.match(/weather [0-9]+$/i)) {
       weather.getWeather(data, rtm, sockets);

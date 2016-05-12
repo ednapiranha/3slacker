@@ -28,7 +28,7 @@ function addFace(texture) {
   });
 
   mesh = new THREE.Mesh(geometry, material);
-  mesh.scale.y = 1.8;
+  mesh.scale.y = 1.8; // This makes the sphere longer so it's more face-like
   scene.add(mesh);
 };
 
@@ -77,7 +77,6 @@ function drawGrids() {
   let geometry = new THREE.Geometry();
 
   for (let i = -size; i <= size; i += step) {
-
     geometry.vertices.push(new THREE.Vector3(-size, 0, i));
     geometry.vertices.push(new THREE.Vector3(-i, 0, size));
     geometry.vertices.push(new THREE.Vector3(i, 0, -size));
@@ -119,7 +118,6 @@ exports.generate = function () {
   let loader = new THREE.TextureLoader();
 
   loader.load('aphextwin.png', function (texture) {
-
     camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 1000);
     camera.position.x = 100;
 
@@ -146,7 +144,7 @@ exports.generate = function () {
   });
 };
 
-// If the window is resized, we want all the 3d items to scale accordingly.
+// If the window is resized, we want all the 3d objects to scale accordingly.
 window.onresize = function () {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();

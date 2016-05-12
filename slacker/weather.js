@@ -46,6 +46,8 @@ function setWeather(id, sockets) {
   }
 };
 
+// Send a request to Open Weather's API and return both a status to the client and also a message to
+// the Slack channel.
 exports.getWeather = function (data, rtm, sockets) {
   let zip = data.text.split('weather ')[1];
   request('http://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',us' +
