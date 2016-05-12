@@ -25,7 +25,7 @@ function sendResponse(data) {
     return;
   }
 
-  if (data.text.match(/butt/gi)) {
+  if (data.text.match(/^butt(\s|$)/gi)) {
     let butt = '( ＾◡＾)っ (‿|‿)';
     sockets.emit('message', butt);
     rtm.sendMessage(butt, data.channel);
@@ -47,12 +47,6 @@ function sendResponse(data) {
   }
 }
 
-function checkMessageType(data) {
-  if (data.text) {
-    sendResponse(data);
-  }
-}
-
 exports.init = function (socket) {
   sockets = socket;
   rtm.start();
@@ -65,12 +59,12 @@ rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, (data) => {
-  console.log(messageHistory)
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
-    if (data.type === 'message') {
-      checkMessageType(data);
+    if (data.type === 'message' && data.text) {
+      sendResponse(data);
     }
+    console.log(messageHistory)
   }
 });
 

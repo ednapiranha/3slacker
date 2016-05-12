@@ -77,9 +77,9 @@ body {
 p {
   color: #b7ea55;
   text-shadow: 3px 3px #111;
-  font-size: 5.1rem;
+  font-size: 4rem;
   margin-bottom: 10px;
-  letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .weather {

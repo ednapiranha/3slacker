@@ -25,7 +25,7 @@ socket.on('message', (data) => {
   p.textContent = data;
   div.appendChild(p);
   div.classList.add('on');
-  wrapper.prependChild(div);
+  wrapper.appendChild(div);
   setTimeout(() => {
     div.classList.remove('on');
   }, 8000);
