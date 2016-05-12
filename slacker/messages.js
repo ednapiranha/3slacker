@@ -51,9 +51,8 @@ rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, (data) => {
-  messageHistory[data.ts] = data;
-
   if (!messageHistory[data.ts]) {
+    messageHistory[data.ts] = data;
     if (data.type === 'message') {
       checkMessageType(data);
     }
