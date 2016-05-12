@@ -16,6 +16,10 @@ let renderer;
 let mesh;
 let line;
 let increase = true;
+let balloon = false;
+let defaultScaleX;
+let defaultScaleY;
+let defaultScaleZ;
 
 // This is where we create the face for our bot and apply the image texture.
 function addFace(texture) {
@@ -29,6 +33,9 @@ function addFace(texture) {
 
   mesh = new THREE.Mesh(geometry, material);
   mesh.scale.y = 1.8; // This makes the sphere longer so it's more face-like
+  defaultScaleX = mesh.scale.x;
+  defaultScaleY = mesh.scale.y;
+  defaultScaleZ = mesh.scale.z;
   scene.add(mesh);
 };
 
@@ -49,6 +56,22 @@ function pulsate() {
   } else {
     mesh.scale.z -= 0.001;
     mesh.scale.x -= 0.001;
+  }
+}
+
+function startBalloon() {
+  if (mesh.scale.z > 4) {
+    balloon = false;
+    mesh.scale.z = defaultScaleZ;
+    mesh.scale.x = defaultScaleX;
+    mesh.scale.y = defaultScaleY;
+    return;
+  }
+
+  if (balloon) {
+    mesh.scale.z += 0.01;
+    mesh.scale.x += 0.01;
+    mesh.scale.y += 0.01;
   }
 }
 
@@ -73,7 +96,8 @@ function setLighting() {
 
 // These are gridlines we add around the face.
 function drawGrids() {
-  let size = 50, step = 4;
+  let size = 50;
+  let step = 4;
   let geometry = new THREE.Geometry();
 
   for (let i = -size; i <= size; i += step) {
@@ -106,7 +130,11 @@ function rotate() {
 // This is what we call to constantly re-render the objects and animate everything.
 function render() {
   rotate();
-  pulsate();
+  if (balloon) {
+    startBalloon();
+  } else {
+    pulsate();
+  }
   renderer.render(scene, camera);
   controls.update();
   requestAnimationFrame(render);
@@ -142,6 +170,11 @@ exports.generate = function () {
     render();
     renderer.setSize(WIDTH, HEIGHT);
   });
+};
+
+exports.startBallooning = function () {
+  balloon = true;
+  startBalloon();
 };
 
 // If the window is resized, we want all the 3d objects to scale accordingly.

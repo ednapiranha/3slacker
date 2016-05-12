@@ -43,6 +43,12 @@ function sendResponse(data) {
   if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
     if (data.text.match(/weather [0-9]+$/i)) {
       weather.getWeather(data, rtm, sockets);
+      return;
+    }
+
+    if (data.text.match(/balloon$/gi)) {
+      sockets.emit('action', 'balloon');
+      return;
     }
   }
 }

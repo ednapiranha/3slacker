@@ -40,3 +40,9 @@ socket.on('weather', (data) => {
     weather.classList.add('on');
   }, 1000);
 });
+
+socket.on('action', (data) => {
+  if (data === 'balloon') {
+    face.startBallooning();
+  }
+});
