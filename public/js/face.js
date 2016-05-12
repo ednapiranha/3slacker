@@ -73,7 +73,8 @@ function setLighting() {
 
 // These are gridlines we add around the face.
 function drawGrids() {
-  let size = 50, step = 4;
+  let size = 50;
+  let step = 4;
   let geometry = new THREE.Geometry();
 
   for (let i = -size; i <= size; i += step) {
