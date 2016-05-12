@@ -109,7 +109,7 @@ server.start(function (err) {
   io = SocketIO.listen(server.listener);
 
   io.on('connection', (socket) => {
-    slacker.init(socket);
+    slacker.init(io);
 
     socket.on('join', (data) => {
       console.log('joined');
