@@ -1,8 +1,0 @@
-{
-    "domain": "localhost",
-    "port": 3000,
-    "analytics": false,
-    "externalDomain": "http://localhost:3000",
-    "slackKey": "",
-    "openWeatherKey": ""
-}
