@@ -38,8 +38,8 @@ function checkMessageType(data) {
   }
 }
 
-exports.init = function (io) {
-  sockets = io.sockets;
+exports.init = function (socket) {
+  sockets = socket;
   rtm.start();
 };
 
