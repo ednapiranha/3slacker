@@ -10,6 +10,7 @@ const ws = require('./ws');
 const socket = ws.getSocket();
 
 const wrapper = document.querySelector('#wrapper');
+const weather = document.querySelector('.weather');
 
 function setTime() {
   return moment().format('LTS');
@@ -35,8 +36,10 @@ socket.on('message', (data) => {
 });
 
 socket.on('weather', (data) => {
-  let img = document.createElement('img');
-  img.classList.add('weather');
-  img.src = '/weather/' + data + '.png';
-  wrapper.appendChild(img);
+  weather.classList.remove('on');
+
+  setTimeout(() => {
+    weather.src = '/weather/' + data + '.png';
+    weather.classList.add('on');
+  }, 1000);
 });

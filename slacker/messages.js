@@ -4,7 +4,8 @@ const RtmClient = require('@slack/client').RtmClient;
 const RTM_CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const nconf = require('nconf');
-const request = require('request');
+
+const weather = require('./weather');
 
 nconf.argv().env().file({ file: 'config.json' });
 
@@ -14,16 +15,6 @@ let uid;
 let username;
 let sockets;
 
-function setWeather(id) {
-  switch (id) {
-    case 800:
-      sockets.emit('weather', 'clear');
-      break;
-    default:
-      break;
-  }
-}
-
 function sendResponse(data) {
   if (data.text.match(/(lo{1,}l|haha|hehe)/gi)) {
     rtm.sendMessage('lol!', data.channel);
@@ -32,21 +23,7 @@ function sendResponse(data) {
 
   if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
     if (data.text.match(/weather [0-9]+$/i)) {
-      let zip = data.text.split('weather ')[1];
-      request('http://api.openweathermap.org/data/2.5/weather?zip=' + zip + ',us' +
-              '&APPID=' + nconf.get('openWeatherKey'), (err, response, body) => {
-        if (!err && response.statusCode === 200) {
-          let weather = JSON.parse(body).weather[0];
-          setWeather(weather.id);
-          rtm.sendMessage('Weather for ' + zip + ' is ' + weather.main, data.channel);
-        } else {
-          rtm.sendMessage('Error retrieving weather report', data.channel);
-        }
-      });
-    } else if (data.text.match(/thanks/gi)) {
-      rtm.sendMessage("You're welcome :D", data.channel);
-    } else if (data.text.match(/you’re weird/gi)) {
-      rtm.sendMessage('I am the walrus', data.channel);
+      weather.getWeather(data, rtm, sockets);
     }
   }
 }
