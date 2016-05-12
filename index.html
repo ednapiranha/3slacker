@@ -15,8 +15,143 @@
       not jaded enough to skim through the source, fear not. You will be able to learn some advanced topics about how
       3d and realtime chat works. If you still find this confusing after, I accept that I probably could have explained better. Maybe I will add more pictures with sounds later.</p>
       <p class="instruction">First, clone the git repo at <a href="https://github.com/ednapiranha/3slacker">https://github.com/ednapiranha/3slacker</a>. Follow the instructions in the README.md file.</p>
-      <p class="instruction">When you view the project in your browser, you will see something like this:</p>
-      <video src="aphex.mp4" loop autoplay=true>
+      <p class="instruction">When you view the project in your browser, you will see something like the video below. Hover over the video to see the key elements we'll be talking about.</p>
+      <div class="video-wrapper">
+        <video src="aphex.mp4" loop autoplay=true></video>
+        <p id="vid-head">pulsating head</p>
+        <p id="vid-wire">rotating gridlines</p>
+        <p id="vid-back">gradient background</p>
+        <p id="vid-lights">subtle lighting</p>
+      </div>
+      <h2>Background</h2>
+      <p class="instruction">This is just plain CSS. You can see the code in the file <span>public/css/main.css</span></p>
+<pre><code>body {
+  font-family: 'Source Code Pro';
+  background: linear-gradient(#2a5961 0%, #19fbf3 60%, #f82cff 100%);
+  background-attachment: fixed;
+}</code></pre>
+      <h2>Rotating gridlines</h2>
+      <p class="instruction">Open up <span>public/js/face.js</span>. You will see that this is separated into some key parts: initialization, setup and functions for re-rendering objects. Right now, we're focusing on the setup portion of the 3D code. Search, and you'll find a function called <span>drawGrids()</span> and another one right after called <span>rotate()</span>. <span>drawGrids()</span> will set up the gridlines and <span>rotate()</span> will ensure they keep moving when re-rendering happens.</p>
+<pre><code>// These are gridlines we add around the face.
+function drawGrids() {
+  let size = 50;
+  let step = 4;
+  let geometry = new THREE.Geometry();
+
+  for (let i = -size; i <= size; i += step) {
+    geometry.vertices.push(new THREE.Vector3(-size, 0, i));
+    geometry.vertices.push(new THREE.Vector3(-i, 0, size));
+    geometry.vertices.push(new THREE.Vector3(i, 0, -size));
+    geometry.vertices.push(new THREE.Vector3(0, size, -i));
+    geometry.vertices.push(new THREE.Vector3(0, -size, i));
+    geometry.vertices.push(new THREE.Vector3(0, i, size));
+    geometry.vertices.push(new THREE.Vector3(0, i, -size));
+  }
+
+  let material = new THREE.LineDashedMaterial({
+    color: '#8f69d1',
+    dashSize: 15,
+    gapSize: 5
+  });
+
+  line = new THREE.LineSegments(geometry, material);
+  scene.add(line);
+}</code></pre>
+<pre><code>// This sets up the rotation speed for the gridlines.
+function rotate() {
+  line.rotation.x += SPEED * 1.8;
+  line.rotation.y += SPEED;
+  line.rotation.z += SPEED * 1.2;
+};</code></pre>
+      <h2>Lighting</h2>
+      <p class="instruction">If you don't put in lighting, things will be really dark and not as fun. In the same file, search for <span>setLighting()</span> to see how that is initialized.</p>
+<pre><code>// Set up all the lighting in the room for the objects.
+function setLighting() {
+  let directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
+  directionalLight.position.set(1, 1, 1);
+  scene.add(directionalLight);
+
+  directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
+  directionalLight.position.set(-1, -1, -1);
+  scene.add(directionalLight);
+
+  directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
+  directionalLight.position.set(0, 0, -1);
+  scene.add(directionalLight);
+
+  directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
+  directionalLight.position.set(0, 0, 1);
+  scene.add(directionalLight);
+}</code></pre>
+      <h2>Pulsating face</h2>
+      <p class="instruction">Here comes the fun part. We need to create a 3D sphere and plaster an image of Richard D. James (Aphex Twin) on top of it. Because who wouldn't want a bot of creepy Aphex Twin? In the samem file, search for <span>new THREE.TextureLoader()</span> located within <span>exports.generate</span>. This loads up the image from your server and passes it to <span>addFace(texture)</span>. You have to wait until it loads or else addFace might run before the texture is ready. Such is JavaScript.</p>
+<pre><code>// We need to wait until the image loads so that we can apply it as a texture. The image path is
+// the path relative to the root of the project. In this case it would be the build/ directory.
+exports.generate = function () {
+  let loader = new THREE.TextureLoader();
+
+  loader.load('aphextwin.png', function (texture) {
+
+    ... other code here we'll talk about later ...
+
+    addFace(texture);
+
+    ...
+
+  });
+};
+</code></pre>
+<pre><code>// This is where we create the face for our bot and apply the image texture.
+function addFace(texture) {
+  let geometry = new THREE.SphereGeometry(18, 24, 32);
+  let material = new THREE.MeshPhongMaterial({
+    color: '#1eecff',
+    reflectivity: 15,
+    shininess: 11,
+    map: texture
+  });
+
+  mesh = new THREE.Mesh(geometry, material);
+  mesh.scale.y = 1.8; // This makes the sphere longer so it's more face-like
+  scene.add(mesh);
+};</code></pre>
+<pre><code>// We want the face to pulsate so it looks like it's breathing. We increase the scales
+// until it reaches a maximum and then we reverse the action until it reaches the minimum.
+function pulsate() {
+  if (mesh.scale.z > 1.1) {
+    increase = false;
+  }
+
+  if (mesh.scale.z < 1) {
+    increase = true
+  }
+
+  if (increase) {
+    mesh.scale.z += 0.001;
+    mesh.scale.x += 0.001;
+  } else {
+    mesh.scale.z -= 0.001;
+    mesh.scale.x -= 0.001;
+  }
+}</code></pre>
+      <p class="instruction">And there you have it - a basic ThreeJS bobblehead bot of Aphex Twin. Or whatever texture you want to use in your bot. Now for the Slack portion of it.</p>
+      <h2>Setting configuration values for Slack and random other APIs</h2>
+      <p class="instruction">Before you can interact with Slack or Open Weather or any other service, you'll need to sign up on their sites to get a token. For Slack, create a new bot at <a href="https://my.slack.com/services/new/bot">https://my.slack.com/services/new/bot</a> and save that token in <span>config.json</span>.</p>
+      <p class="instruction">I also set one up for weather reports, so if you want to do the same, sign up for a token at <a href="http://openweathermap.org/appid">http://openweathermap.org/appid</a>. Once you added both tokens, save the file and restart your node project.</p>
+<pre><code>{
+    "domain": "localhost",
+    "port": 3000,
+    "analytics": false,
+    "externalDomain": "http://localhost:3000",
+    "slackKey": "&lt;YOUR SLACK TOKEN HERE&gt;",
+    "openWeatherKey": "&lt;YOUR OPEN WEATHER TOKEN HERE&gt;"
+}</code></pre>
+      <h2>Interacting with Slack messages</h2>
+      <p class="instruction">Before someone tries to tell me you can do this all client-side and not need a server, yes that is true, but I did it this way so deal with it. And no, I am not going to rewrite this in yet another JavaScript framework - but YOU can if YOU are feeling up to it. Now that we have that situation sorted out, let's talk about how we send messages from Slack and Open Weather back and forth to the bot.</p>
+      <p class="instruction">We have two main parts: the web socket that sends data between the server and the client and the actions that talk to the external APIs. In the Slack messages, I have two main checks - one to see if the message was directed to the bot specifically (for the weather report) and one to see if anyone laughed. You can view it in <span>slackers/messages.js</span>.</p>
+<pre><code>
+
+</code></pre>
     </div>
   </body>
 </html>

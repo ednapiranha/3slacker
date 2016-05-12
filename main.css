@@ -61,7 +61,7 @@ body {
   width: 96vw;
 }
 
-h1 {
+h1, h2 {
   color: #fff;
   font-family: Rokkitt;
   font-size: 2.2rem;
@@ -70,6 +70,10 @@ h1 {
   -webkit-transition: all 2s;
   line-height: 2.5rem;
   margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2rem;
 }
 
 h1:hover {
@@ -109,7 +113,7 @@ h1:hover {
 a {
   color: #222;
   text-decoration: none;
-  text-shadow: 0 0 #79caa1;
+  text-shadow: 1px 1px #fff;
   transition: all .5s;
   -webkit-transition: all .5s;
 }
@@ -119,4 +123,77 @@ a:hover {
   text-shadow: 2px 2px #111;
   transition: all .5s;
   -webkit-transition: all .5s;
+}
+
+.video-wrapper {
+  position: relative;
+  max-width: 600px;
+  min-width: 300px;
+  width: 100%;
+}
+
+.video-wrapper p {
+  position: absolute;
+  color: transparent;
+  text-transform: uppercase;
+  font-size: 1rem;
+  max-width: 100px;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1s;
+  -webkit-transition: opacity 1s;
+}
+
+video {
+  width: 100%;
+}
+
+.video-wrapper:hover p {
+  color: #c0e771;
+  text-shadow: 2px 2px #111;
+  opacity: 1;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+}
+
+#vid-head {
+  top: 20%;
+  right: 20%;
+}
+
+.video-wrapper:hover p:hover {
+  font-size: 1.2rem;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+}
+
+#vid-wire {
+  top: 45%;
+  left: 5%;
+}
+
+#vid-back {
+  bottom: 5%;
+  left: 30%;
+}
+
+#vid-lights {
+  bottom: 10%;
+  right: 5%;
+}
+
+p span {
+  color: #333;
+  background-color: #aaa;
+}
+
+pre {
+  margin: 15px 0;
+  background-color: #111;
+  color: #eee;
+  font-family: monospace;
+  padding: 10px;
+  font-size: 1rem;
+  line-height: 1.2rem;
+  white-space: pre-wrap;
 }
