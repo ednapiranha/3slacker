@@ -16,6 +16,7 @@ socket.on('connect', () => {
   socket.emit('join');
 });
 
+// Incoming messages are appended into the page.
 socket.on('message', (data) => {
   let div = document.createElement('div');
   div.classList.add('message');
@@ -26,6 +27,7 @@ socket.on('message', (data) => {
   wrapper.appendChild(div);
 });
 
+// Incoming weather statuses are matched by their respective images located in build/weather/.
 socket.on('weather', (data) => {
   weather.classList.remove('on');
 
