@@ -10,6 +10,7 @@ const socket = ws.getSocket();
 const wrapper = document.querySelector('#wrapper');
 const weather = document.querySelector('.weather');
 
+// Initialize and render the 3D parts.
 face.generate();
 
 socket.on('connect', () => {
