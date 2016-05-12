@@ -14,6 +14,7 @@ const rtm = new RtmClient(nconf.get('slackKey'));
 let uid;
 let username;
 let sockets;
+let messageHistory = {};
 
 // This checks what kind of response to send depending on the regex we want to look for.
 function sendResponse(data) {
@@ -50,13 +51,12 @@ rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, (data) => {
-  switch (data.type) {
-    case 'message':
-      checkMessageType(data);
-      break;
+  messageHistory[data.ts] = data;
 
-    default:
-      break;
+  if (!messageHistory[data.ts]) {
+    if (data.type === 'message') {
+      checkMessageType(data);
+    }
   }
 });
 
