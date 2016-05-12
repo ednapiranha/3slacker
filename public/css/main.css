@@ -57,37 +57,34 @@ body {
 }
 
 /* main styles */
-#wrapper {
-  position: relative;
-  text-align: center;
-}
-
-.home {
+.message {
   opacity: 0;
   height: 0;
   width: 0;
-  position: absolute;
-  left: 0;
-  right: auto;
   transition: all 1s;
   -webkit-transition: all 1s;
-  z-index: 2;
-  top: 20px;
+  padding: 10px;
 }
 
-.home.on {
+.message.on {
   opacity: 1;
   height: auto;
   width: auto;
-  left: auto;
-  right: 200;
   transition: all 1s;
   -webkit-transition: all 1s;
 }
 
 p {
   color: #fff;
-  font-size: 3rem;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.weather {
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0.7;
 }
 
 canvas {

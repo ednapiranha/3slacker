@@ -10,7 +10,6 @@ const ws = require('./ws');
 const socket = ws.getSocket();
 
 const wrapper = document.querySelector('#wrapper');
-const div = document.querySelector('.message');
 
 function setTime() {
   return moment().format('LTS');
@@ -23,5 +22,21 @@ socket.on('connect', () => {
 });
 
 socket.on('message', (data) => {
-  face.setText(data, setTime());
+  let div = document.createElement('div');
+  div.classList.add('message');
+  let p = document.createElement('p');
+  p.textContent = data;
+  let time = document.createElement('time');
+  time.textContent = setTime();
+  div.appendChild(time);
+  div.appendChild(p);
+  div.classList.add('on');
+  wrapper.appendChild(div);
+});
+
+socket.on('weather', (data) => {
+  let img = document.createElement('img');
+  img.classList.add('weather');
+  img.src = '/weather/' + data + '.png';
+  wrapper.appendChild(img);
 });

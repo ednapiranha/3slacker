@@ -87,7 +87,7 @@ exports.generate = function () {
     let increase = true;
 
     function pulsate() {
-      if (mesh.scale.z > 1.3) {
+      if (mesh.scale.z > 1.1) {
         increase = false;
       }
 
@@ -96,11 +96,11 @@ exports.generate = function () {
       }
 
       if (increase) {
-        mesh.scale.z += 0.01;
-        mesh.scale.x += 0.01;
+        mesh.scale.z += 0.001;
+        mesh.scale.x += 0.001;
       } else {
-        mesh.scale.z -= 0.01;
-        mesh.scale.x -= 0.01;
+        mesh.scale.z -= 0.001;
+        mesh.scale.x -= 0.001;
       }
     }
 
@@ -135,34 +135,6 @@ exports.generate = function () {
     render();
     renderer.setSize(WIDTH, HEIGHT);
   });
-};
-
-function writeText(text, time) {
-  let incomingTxt = new THREE.TextGeometry(time + ': ' + text, {
-    font: font
-  });
-  let material = new THREE.MeshPhongMaterial({
-    color: '#1eecff',
-    reflectivity: 15,
-    shininess: 11
-  });
-
-  let txtMesh = new THREE.Mesh(incomingTxt, material);
-  console.log(txtMesh)
-  scene.add(txtMesh);
-}
-
-exports.setText = function (text, time) {
-  if (!currentFont) {
-    let loader = new THREE.FontLoader();
-
-    loader.load('league_spartan_bold.js', function (font) {
-      currentFont = font;
-      writeText(text, time);
-    });
-  } else {
-    writeText(text, time);
-  }
 };
 
 window.onresize = function () {
