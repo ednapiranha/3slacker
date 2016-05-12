@@ -29,21 +29,6 @@ function sendResponse(data) {
 }
 
 function checkMessageType(data) {
-  console.log(data)
-  if (data.subtype) {
-    switch (data.subtype) {
-      case 'channel_join':
-        sockets.emit('message', "Hi, I'm just saying hi that's all. Ok.");
-        rtm.sendMessage("Hi, I'm just saying hi that's all. Ok.", data.channel);
-        break;
-
-      default:
-        break;
-    }
-
-    return;
-  }
-
   if (data.text) {
     sendResponse(data);
   }
