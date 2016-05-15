@@ -47,22 +47,22 @@ function sendResponse(data) {
     return;
   }
 
-  if (data.text.match(/(lo{1,}l|haha|hehe|:\)|:D|:smile:|:slightly_smiling_face:)/gi)) {
+  if (data.text.match(/(lo{1,}l|haha|hehe|:\){1,}|:D{1,}|:smile:|:slightly_smiling_face:)(\W|$)/gi)) {
     sockets.emit('action', 'happy');
     return;
   }
 
-  if (data.text.match(/(:\(|D:|boo{1,}|:anguished:|)/gi)) {
+  if (data.text.match(/(:\({1,}|D:|:\\|boo{1,}|:anguished:)(\W|$)/gi)) {
     sockets.emit('action', 'sad');
     return;
   }
 
-  if (data.text.match(/:stuck_out_tongue:/gi)) {
+  if (data.text.match(/(:stuck_out_tongue:)/gi)) {
     sockets.emit('action', 'tongue');
     return;
   }
 
-  if (data.text.match(/:wink:/gi)) {
+  if (data.text.match(/(:wink:|;D)/gi)) {
     sockets.emit('action', 'wink');
     return;
   }

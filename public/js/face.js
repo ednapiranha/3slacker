@@ -174,7 +174,6 @@ exports.generate = function () {
   }
 
   preloadTextures((err, textures) => {
-    console.log('textures: ', textures);
     camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 1000);
     camera.position.x = 100;
 
