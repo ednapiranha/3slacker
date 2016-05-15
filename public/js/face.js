@@ -20,7 +20,7 @@ let balloon = false;
 let defaultScaleX;
 let defaultScaleY;
 let defaultScaleZ;
-let textures = [];
+let textures = {};
 let faceSphere;
 
 // This is where we create the face for our bot and apply the image texture.
@@ -163,9 +163,7 @@ exports.generate = function () {
   function preloadTextures(next) {
     imageArr.forEach((img) => {
       loader.load(img, function (texture) {
-        if (textures.indexOf(texture) === -1) {
-          textures.push(texture);
-        }
+        textures[img] = texture;
         if (count === imageArr.length - 1) {
           return next(null, textures);
         }
@@ -193,7 +191,7 @@ exports.generate = function () {
 
     document.body.appendChild(renderer.domElement);
 
-    setFace(textures[0]);
+    setFace(textures['face1.png']);
     setLighting();
     drawGrids();
 
@@ -212,19 +210,19 @@ exports.setFace = function (mood) {
   console.log('mood ', mood)
   switch (mood) {
     case 'happy':
-      setFace(textures[1]);
+      setFace(textures['face2.png']);
       break;
     case 'sad':
-      setFace(textures[2]);
+      setFace(textures['face3.png']);
       break;
     case 'wink':
-      setFace(textures[3]);
+      setFace(textures['face4.png']);
       break;
     case 'tongue':
-      setFace(textures[4]);
+      setFace(textures['face5.png']);
       break;
     default:
-      setFace(textures[0]);
+      setFace(textures['face1.png']);
       break;
   }
 };
