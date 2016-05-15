@@ -15,6 +15,7 @@ const rtm = new RtmClient(nconf.get('slackKey'));
 let uid;
 let username;
 let sockets;
+let socket;
 let messageHistory = {};
 
 // This checks what kind of response to send depending on the regex we want to look for.
@@ -51,15 +52,16 @@ function sendResponse(data) {
   reactions.setType(data, sockets);
 }
 
-exports.init = function (io) {
+exports.init = function (io, socket) {
   sockets = io.sockets;
+  socket = socket;
   rtm.start();
 };
 
 rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
   uid = data.self.id;
   username = data.self.name;
-  sockets.emit('message', 'i am connected to slack.');
+  socket.emit('message', 'i am connected to slack.');
   console.log('connected');
 });
 
