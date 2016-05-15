@@ -153,6 +153,27 @@ function render() {
   requestAnimationFrame(render);
 };
 
+function setHat() {
+  let hat = new THREE.TorusGeometry(11, 1.5, 5, 50);
+  let material = new THREE.MeshPhongMaterial({
+    color: '#514ef6',
+    reflectivity: 20,
+    shininess: 16,
+    specular: '#f00'
+  });
+
+  let hatMesh;
+
+  for (let i = 0; i < 3; i++) {
+    hatMesh = new THREE.Mesh(hat, material);
+    hatMesh.rotation.x = -(Math.PI / 2);
+    hatMesh.rotation.y = -15;
+    hatMesh.position.y = 30 - (i * 5);
+    hatMesh.position.x = -i * 10;
+    scene.add(hatMesh);
+  }
+}
+
 exports.generate = function () {
   // We need to wait until the image loads so that we can apply it as a texture. The image path is
   // the path relative to the root of the project. In this case it would be the build/ directory.
@@ -180,8 +201,8 @@ exports.generate = function () {
     // This allows us to rotate around the objects and zoom in and out.
     controls = new OrbitControls(camera);
     controls.enableZoom = true;
-    controls.minDistance = 60;
-    controls.maxDistance = 100;
+    controls.minDistance = 50;
+    controls.maxDistance = 200;
     controls.autoRotate = false;
 
     renderer = new THREE.WebGLRenderer({
@@ -192,6 +213,7 @@ exports.generate = function () {
     document.body.appendChild(renderer.domElement);
 
     setFace(textures['face1.png']);
+    setHat();
     setLighting();
     drawGrids();
 
