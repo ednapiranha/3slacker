@@ -52,9 +52,9 @@ function sendResponse(data) {
   reactions.setType(data, sockets);
 }
 
-exports.init = function (io, socket) {
+exports.init = function (io, sck) {
   sockets = io.sockets;
-  socket = socket;
+  socket = sck;
   rtm.start();
 };
 
