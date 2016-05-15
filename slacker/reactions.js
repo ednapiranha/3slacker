@@ -1,7 +1,6 @@
 'use strict';
 
 exports.setType = function (data, sockets) {
-  console.log('got here')
   // happy
   if (data.text.match(/(lo{1,}l|haha|hehe|:\){1,}|:D{1,}|:smile:|:slightly_smiling_face:|ya{1,}y|wo{1,})(\W|$)/gi)) {
     sockets.emit('action', 'happy');

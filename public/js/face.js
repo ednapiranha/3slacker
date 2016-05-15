@@ -7,7 +7,7 @@ const SPEED = 0.001;
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 const LIGHTING = '#eee';
-const LIGHT_OPACITY = 0.9;
+const LIGHT_OPACITY = 0.95;
 
 let scene = new THREE.Scene();
 let camera;
@@ -31,13 +31,16 @@ function setFace(texture) {
   faceSphere = new THREE.SphereGeometry(18, 24, 32);
   let material = new THREE.MeshPhongMaterial({
     color: '#1eecff',
-    reflectivity: 15,
-    shininess: 13,
+    reflectivity: 11,
+    shininess: 11,
+    specular: '#f00',
     map: texture
   });
 
   mesh = new THREE.Mesh(faceSphere, material);
-  mesh.scale.y = 1.6; // This makes the sphere longer so it's more face-like
+  mesh.scale.y = 1.6;
+  mesh.scale.x = 1.1;
+  mesh.scale.z = 1;
   defaultScaleX = mesh.scale.x;
   defaultScaleY = mesh.scale.y;
   defaultScaleZ = mesh.scale.z;
@@ -104,7 +107,7 @@ function setLighting() {
 }
 
 // These are gridlines we add around the face.
-function drawGrids() {
+function drawGrids(color) {
   let size = 60;
   let step = 4;
   let geometry = new THREE.Geometry();
@@ -120,9 +123,10 @@ function drawGrids() {
   }
 
   let material = new THREE.LineDashedMaterial({
-    color: '#8f69d1',
+    color: color || '#8f69d1',
     dashSize: 15,
-    gapSize: 5
+    gapSize: 5,
+    opacity: 0.7
   });
 
   line = new THREE.LineSegments(geometry, material);
@@ -203,21 +207,27 @@ exports.startBallooning = function () {
 };
 
 exports.setFace = function (mood) {
+  scene.remove(line);
   switch (mood) {
     case 'happy':
       setFace(textures['face2.png']);
+      drawGrids('#ff6bd9');
       break;
     case 'sad':
       setFace(textures['face3.png']);
+      drawGrids('#111');
       break;
     case 'wink':
       setFace(textures['face4.png']);
+      drawGrids();
       break;
     case 'tongue':
       setFace(textures['face5.png']);
+      drawGrids('#56d2ff');
       break;
     default:
       setFace(textures['face1.png']);
+      drawGrids();
       break;
   }
 };
