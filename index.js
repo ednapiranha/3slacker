@@ -113,6 +113,7 @@ server.start(function (err) {
 
     socket.on('join', (data) => {
       console.log('joined');
+      socket.emit('message', 'attempting to connect ...');
     });
   });
 });

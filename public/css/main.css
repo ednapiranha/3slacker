@@ -82,7 +82,7 @@ body {
   -webkit-transition: all 1s;
   left: 20vw;
   top: 60vh;
-  max-width: 200px;
+  max-width: 180px;
 }
 
 .message-line {

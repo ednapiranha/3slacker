@@ -59,6 +59,7 @@ exports.init = function (io) {
 rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
   uid = data.self.id;
   username = data.self.name;
+  sockets.emit('message', 'i am connected to slack.');
   console.log('connected');
 });
 
