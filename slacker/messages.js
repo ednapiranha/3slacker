@@ -47,13 +47,23 @@ function sendResponse(data) {
     return;
   }
 
-  if (data.text.match(/(lo{1,}l|haha|hehe|:\)|:D)/gi)) {
+  if (data.text.match(/(lo{1,}l|haha|hehe|:\)|:D|:smile:|:slightly_smiling_face:)/gi)) {
     sockets.emit('action', 'happy');
     return;
   }
 
-  if (data.text.match(/(:\(|D:|boo{1,})/gi)) {
+  if (data.text.match(/(:\(|D:|boo{1,}|:anguished:|)/gi)) {
     sockets.emit('action', 'sad');
+    return;
+  }
+
+  if (data.text.match(/:stuck_out_tongue:/gi)) {
+    sockets.emit('action', 'tongue');
+    return;
+  }
+
+  if (data.text.match(/:wink:/gi)) {
+    sockets.emit('action', 'wink');
     return;
   }
 }

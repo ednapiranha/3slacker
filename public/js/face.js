@@ -218,6 +218,12 @@ exports.setFace = function (mood) {
     case 'sad':
       setFace(textures[2]);
       break;
+    case 'wink':
+      setFace(textures[3]);
+      break;
+    case 'tongue':
+      setFace(textures[4]);
+      break;
     default:
       setFace(textures[0]);
       break;
