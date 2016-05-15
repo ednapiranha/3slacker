@@ -63,7 +63,15 @@ body {
   width: 0;
   transition: all 1s;
   -webkit-transition: all 1s;
-  padding: 10px;
+  padding: 5px;
+  color: #39ecff;
+  border: 1px solid #39ecff;
+  background-color: rgba(1, 1, 1, 0.4);
+  display: inline-block;
+  position: absolute;
+  z-index: 3;
+  top: 50vh;
+  left: 50vw;
 }
 
 .message.on {
@@ -72,14 +80,35 @@ body {
   width: auto;
   transition: all 1s;
   -webkit-transition: all 1s;
+  left: 20vw;
+  top: 60vh;
+  max-width: 200px;
+}
+
+.message-line {
+  background-color:#39ecff;
+  box-shadow: #111 -1px -1px 0;
+  width: 46px;
+  height: 2px;
+  -webkit-transform:
+    translateY(-20px)
+    translateX(5px)
+    rotate(27deg);
+  transform:
+    translateY(-20px)
+    translateX(5px)
+    rotate(27deg);
+  position: absolute;
+  z-index: 3;
+  bottom: -34px;
+  right: 0;
 }
 
 p {
-  color: #b7ea55;
-  text-shadow: 3px 3px #111;
-  font-size: 4rem;
-  margin-bottom: 10px;
-  white-space: nowrap;
+  text-shadow: 2px 2px #111;
+  font-size: 1rem;
+  line-height: 1.1rem;
+  display: inline-block;
 }
 
 .weather {
@@ -100,8 +129,13 @@ p {
   -webkit-transition: all 1s;
 }
 
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+@media (max-width: 550px) {
+  .message {
+    padding: 3px;
+  }
+
+  p {
+    font-size: 0.8rem;
+    line-height: 0.95rem;
+  }
 }

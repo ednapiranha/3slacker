@@ -101,15 +101,11 @@ function setLighting() {
   directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
   directionalLight.position.set(1, 1, 0);
   scene.add(directionalLight);
-
-  directionalLight = new THREE.DirectionalLight('#f00', LIGHT_OPACITY);
-  directionalLight.position.set(0, 1, 1);
-  scene.add(directionalLight);
 }
 
 // These are gridlines we add around the face.
 function drawGrids() {
-  let size = 50;
+  let size = 60;
   let step = 4;
   let geometry = new THREE.Geometry();
 
@@ -207,7 +203,6 @@ exports.startBallooning = function () {
 };
 
 exports.setFace = function (mood) {
-  console.log('mood ', mood)
   switch (mood) {
     case 'happy':
       setFace(textures['face2.png']);

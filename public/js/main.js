@@ -10,6 +10,8 @@ const socket = ws.getSocket();
 const wrapper = document.querySelector('#wrapper');
 const weather = document.querySelector('.weather');
 
+const msg = document.querySelector('.message');
+
 // Initialize and render the 3D parts.
 face.generate();
 
@@ -19,10 +21,11 @@ socket.on('connect', () => {
 
 // Incoming messages are appended into the page.
 socket.on('message', (data) => {
-  let div = document.createElement('div');
-  div.classList.add('message');
   let p = document.createElement('p');
   p.textContent = data;
+  msg.querySelectorAll('p').forEach((el) => {
+    msg.removeChild(el);
+  });
   div.appendChild(p);
   div.classList.add('on');
   wrapper.appendChild(div);

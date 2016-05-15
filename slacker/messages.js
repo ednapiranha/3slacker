@@ -6,6 +6,7 @@ const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const nconf = require('nconf');
 
 const weather = require('./weather');
+const reactions = require('./reactions');
 
 nconf.argv().env().file({ file: 'config.json' });
 
@@ -47,25 +48,7 @@ function sendResponse(data) {
     return;
   }
 
-  if (data.text.match(/(lo{1,}l|haha|hehe|:\){1,}|:D{1,}|:smile:|:slightly_smiling_face:)(\W|$)/gi)) {
-    sockets.emit('action', 'happy');
-    return;
-  }
-
-  if (data.text.match(/(:\({1,}|D:|:\\{1,}|boo{1,}|:anguished:)(\W|$)/gi)) {
-    sockets.emit('action', 'sad');
-    return;
-  }
-
-  if (data.text.match(/(:stuck_out_tongue:|:stuck_out_tongue_winking_eye:)(\W|$)/gi)) {
-    sockets.emit('action', 'tongue');
-    return;
-  }
-
-  if (data.text.match(/(:wink:|;D{1,})(\W|$)/gi)) {
-    sockets.emit('action', 'wink');
-    return;
-  }
+  reactions.setType(data, sockets);
 }
 
 exports.init = function (io) {
