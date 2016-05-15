@@ -52,17 +52,17 @@ function sendResponse(data) {
     return;
   }
 
-  if (data.text.match(/(:\({1,}|D:|:\\|boo{1,}|:anguished:)(\W|$)/gi)) {
+  if (data.text.match(/(:\({1,}|D:|:\\{1,}|boo{1,}|:anguished:)(\W|$)/gi)) {
     sockets.emit('action', 'sad');
     return;
   }
 
-  if (data.text.match(/(:stuck_out_tongue:)/gi)) {
+  if (data.text.match(/(:stuck_out_tongue:|:stuck_out_tongue_winking_eye:)(\W|$)/gi)) {
     sockets.emit('action', 'tongue');
     return;
   }
 
-  if (data.text.match(/(:wink:|;D)/gi)) {
+  if (data.text.match(/(:wink:|;D{1,})(\W|$)/gi)) {
     sockets.emit('action', 'wink');
     return;
   }
