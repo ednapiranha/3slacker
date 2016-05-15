@@ -202,7 +202,7 @@ exports.generate = function () {
 
 exports.startBallooning = function () {
   balloon = true;
-  setFace(textures[1]);
+  setFace(textures['face2.png']);
   startBalloon();
 };
 
