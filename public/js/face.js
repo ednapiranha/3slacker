@@ -20,19 +20,24 @@ let balloon = false;
 let defaultScaleX;
 let defaultScaleY;
 let defaultScaleZ;
+let textures = [];
+let faceSphere;
 
 // This is where we create the face for our bot and apply the image texture.
-function addFace(texture) {
-  let geometry = new THREE.SphereGeometry(18, 24, 32);
+function setFace(texture) {
+  if (mesh) {
+    scene.remove(mesh);
+  }
+  faceSphere = new THREE.SphereGeometry(18, 24, 32);
   let material = new THREE.MeshPhongMaterial({
     color: '#1eecff',
     reflectivity: 15,
-    shininess: 11,
+    shininess: 13,
     map: texture
   });
 
-  mesh = new THREE.Mesh(geometry, material);
-  mesh.scale.y = 1.8; // This makes the sphere longer so it's more face-like
+  mesh = new THREE.Mesh(faceSphere, material);
+  mesh.scale.y = 1.6; // This makes the sphere longer so it's more face-like
   defaultScaleX = mesh.scale.x;
   defaultScaleY = mesh.scale.y;
   defaultScaleZ = mesh.scale.z;
@@ -92,6 +97,14 @@ function setLighting() {
   directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
   directionalLight.position.set(0, 0, 1);
   scene.add(directionalLight);
+
+  directionalLight = new THREE.DirectionalLight(LIGHTING, LIGHT_OPACITY);
+  directionalLight.position.set(1, 1, 0);
+  scene.add(directionalLight);
+
+  directionalLight = new THREE.DirectionalLight('#f00', LIGHT_OPACITY);
+  directionalLight.position.set(0, 1, 1);
+  scene.add(directionalLight);
 }
 
 // These are gridlines we add around the face.
@@ -144,8 +157,26 @@ exports.generate = function () {
   // We need to wait until the image loads so that we can apply it as a texture. The image path is
   // the path relative to the root of the project. In this case it would be the build/ directory.
   let loader = new THREE.TextureLoader();
+  let count = 0;
+  let imageArr = ['face1.png', 'face2.png', 'face3.png'];
 
-  loader.load('aphextwin.png', function (texture) {
+  function preloadTextures(next) {
+    imageArr.forEach((img) => {
+      console.log('+++++ ', img)
+      loader.load(img, function (texture) {
+        textures.push(texture);
+        console.log('------- ', textures);
+        if (count === imageArr.length - 1) {
+          return next(null, textures);
+        }
+
+        count++;
+      });
+    });
+  }
+
+  preloadTextures((err, textures) => {
+    console.log('textures: ', textures);
     camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 1000);
     camera.position.x = 100;
 
@@ -163,7 +194,7 @@ exports.generate = function () {
 
     document.body.appendChild(renderer.domElement);
 
-    addFace(texture);
+    setFace(textures[0]);
     setLighting();
     drawGrids();
 
@@ -174,7 +205,23 @@ exports.generate = function () {
 
 exports.startBallooning = function () {
   balloon = true;
+  setFace(textures[1]);
   startBalloon();
+};
+
+exports.setFace = function (mood) {
+  console.log('mood ', mood)
+  switch (mood) {
+    case 'happy':
+      setFace(textures[1]);
+      break;
+    case 'sad':
+      setFace(textures[2]);
+      break;
+    default:
+      setFace(textures[0]);
+      break;
+  }
 };
 
 // If the window is resized, we want all the 3d objects to scale accordingly.

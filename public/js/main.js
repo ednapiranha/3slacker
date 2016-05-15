@@ -42,7 +42,18 @@ socket.on('weather', (data) => {
 });
 
 socket.on('action', (data) => {
-  if (data === 'balloon') {
-    face.startBallooning();
+  switch (data) {
+    case 'balloon':
+      face.startBallooning();
+      break;
+    case 'happy':
+      face.setFace('happy');
+      break;
+    case 'sad':
+      face.setFace('sad');
+      break;
+    default:
+      face.setFace('default');
+      break;
   }
 });

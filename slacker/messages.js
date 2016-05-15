@@ -18,13 +18,7 @@ let messageHistory = {};
 
 // This checks what kind of response to send depending on the regex we want to look for.
 function sendResponse(data) {
-  // Let's return a response back to the client if someone in the same channel as the bot says "lol" or
-  // "looool" or "LOOOOOOOOOOL" or any variant of that, or haha or hehe or HAHAHA or HEHEHEHE, etc.
-  if (data.text.match(/(lo{1,}l|haha|hehe)/gi)) {
-    sockets.emit('message', 'HAHAHAHAHHAHAHAHAHAHAHA!');
-    return;
-  }
-
+  /*
   if (data.text.match(/^butt(\s|$)/gi)) {
     let butt = '( ＾◡＾)っ (‿|‿)';
     sockets.emit('message', butt);
@@ -38,6 +32,7 @@ function sendResponse(data) {
     rtm.sendMessage(cat, data.channel);
     return;
   }
+  */
 
   // Let's return a weather status for a particular zip code in the United States.
   if (data.text.match(/3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
@@ -45,11 +40,21 @@ function sendResponse(data) {
       weather.getWeather(data, rtm, sockets);
       return;
     }
+  }
 
-    if (data.text.match(/balloon$/gi)) {
-      sockets.emit('action', 'balloon');
-      return;
-    }
+  if (data.text.match(/balloon$/gi)) {
+    sockets.emit('action', 'balloon');
+    return;
+  }
+
+  if (data.text.match(/(lo{1,}l|haha|hehe|:\)|:D)/gi)) {
+    sockets.emit('action', 'happy');
+    return;
+  }
+
+  if (data.text.match(/(:\(|D:|boo{1,})/gi)) {
+    sockets.emit('action', 'sad');
+    return;
   }
 }
 
