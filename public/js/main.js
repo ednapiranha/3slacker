@@ -27,11 +27,9 @@ socket.on('message', (data) => {
   let p = msg.querySelector('p');
   p.textContent = data;
   msg.classList.add('on');
-  activeMsg = function () {
-    setTimeout(() => {
-      msg.classList.remove('on');
-    }, 8000);
-  };
+  activeMsg = setTimeout(() => {
+    msg.classList.remove('on');
+  }, 8000);
 });
 
 // Incoming weather statuses are matched by their respective images located in build/weather/.
