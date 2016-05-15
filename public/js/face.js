@@ -158,14 +158,12 @@ exports.generate = function () {
   // the path relative to the root of the project. In this case it would be the build/ directory.
   let loader = new THREE.TextureLoader();
   let count = 0;
-  let imageArr = ['face1.png', 'face2.png', 'face3.png'];
+  let imageArr = ['face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png'];
 
   function preloadTextures(next) {
     imageArr.forEach((img) => {
-      console.log('+++++ ', img)
       loader.load(img, function (texture) {
         textures.push(texture);
-        console.log('------- ', textures);
         if (count === imageArr.length - 1) {
           return next(null, textures);
         }
