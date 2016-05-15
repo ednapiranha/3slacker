@@ -163,7 +163,9 @@ exports.generate = function () {
   function preloadTextures(next) {
     imageArr.forEach((img) => {
       loader.load(img, function (texture) {
-        textures.push(texture);
+        if (textures.indexOf(texture) === -1) {
+          textures.push(texture);
+        }
         if (count === imageArr.length - 1) {
           return next(null, textures);
         }

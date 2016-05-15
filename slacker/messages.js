@@ -85,7 +85,10 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
     if (data.type === 'message' && data.text) {
       sendResponse(data);
     }
-    console.log(messageHistory)
+
+    setTimeout(() => {
+      delete messageHistory[data.ts];
+    }, 15000);
   }
 });
 
