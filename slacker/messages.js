@@ -6,6 +6,7 @@ const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const nconf = require('nconf');
 
 const reactions = require('./reactions');
+const responses = require('./responses');
 
 nconf.argv().env().file({ file: 'config.json' });
 
