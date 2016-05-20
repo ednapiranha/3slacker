@@ -53,11 +53,8 @@ socket.on('action', (data) => {
     case 'sad':
       face.setFace('sad');
       break;
-    case 'tongue':
-      face.setFace('tongue');
-      break;
-    case 'wink':
-      face.setFace('wink');
+    case 'surprise':
+      face.setFace('surprise');
       break;
     default:
       face.setFace('default');

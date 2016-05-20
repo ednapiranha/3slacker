@@ -15,17 +15,10 @@ exports.setType = function (data, sockets) {
     return;
   }
 
-  // tongue
-  if (data.text.match(/(:stuck_out_tongue:|:stuck_out_tongue_winking_eye:)(\W|$)/gi)) {
-    sockets.emit('action', 'tongue');
-    sockets.emit('message', ':P');
-    return;
-  }
-
-  // wink
-  if (data.text.match(/(:wink:|;D{1,})(\W|$)/gi)) {
-    sockets.emit('action', 'wink');
-    sockets.emit('message', ';)');
+  // surprise
+  if (data.text.match(/(:open_mouth:|:o)(\W|$)/gi)) {
+    sockets.emit('action', 'surprise');
+    sockets.emit('message', ':o');
     return;
   }
 

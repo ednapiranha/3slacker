@@ -71,7 +71,7 @@ body {
   position: absolute;
   z-index: 3;
   top: 50vh;
-  left: 50vw;
+  left: 0vw;
 }
 
 .message.on {
@@ -81,7 +81,7 @@ body {
   transition: all 1s;
   -webkit-transition: all 1s;
   left: 20vw;
-  top: 60vh;
+  top: 45vh;
   max-width: 180px;
   min-width: 150px;
 }

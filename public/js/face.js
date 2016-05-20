@@ -2,6 +2,7 @@
 
 const THREE = require('three');
 const OrbitControls = require('three-orbit-controls')(THREE);
+const STLLoader = require('three-stl-loader')(THREE);
 
 const SPEED = 0.001;
 const WIDTH = window.innerWidth;
@@ -24,23 +25,23 @@ let textures = {};
 let faceSphere;
 
 // This is where we create the face for our bot and apply the image texture.
-function setFace(texture) {
+function setFace(geometry) {
   if (mesh) {
     scene.remove(mesh);
   }
-  faceSphere = new THREE.SphereGeometry(18, 24, 32);
+
   let material = new THREE.MeshPhongMaterial({
-    color: '#1eecff',
-    reflectivity: 11,
-    shininess: 11,
-    specular: '#f00',
-    map: texture
+    color: '#39d3c3',
+    reflectivity: 15,
+    shininess: 16,
+    specular: '#f2239d',
+    wireframe: true
   });
 
-  mesh = new THREE.Mesh(faceSphere, material);
-  mesh.scale.y = 1.6;
-  mesh.scale.x = 1.1;
-  mesh.scale.z = 1;
+  mesh = new THREE.Mesh(geometry, material);
+  mesh.scale.z += 1;
+  mesh.scale.x += 1;
+  mesh.scale.y += 1;
   defaultScaleX = mesh.scale.x;
   defaultScaleY = mesh.scale.y;
   defaultScaleZ = mesh.scale.z;
@@ -50,25 +51,25 @@ function setFace(texture) {
 // We want the face to pulsate so it looks like it's breathing. We increase the scales
 // until it reaches a maximum and then we reverse the action until it reaches the minimum.
 function pulsate() {
-  if (mesh.scale.z > 1.1) {
+  if (mesh.scale.z > 2.1) {
     increase = false;
   }
 
-  if (mesh.scale.z < 1) {
+  if (mesh.scale.z < 1.8) {
     increase = true
   }
 
   if (increase) {
     mesh.scale.z += 0.001;
-    mesh.scale.x += 0.001;
+    mesh.scale.x += 0.004;
   } else {
     mesh.scale.z -= 0.001;
-    mesh.scale.x -= 0.001;
+    mesh.scale.x -= 0.004;
   }
 }
 
 function startBalloon() {
-  if (mesh.scale.z > 4) {
+  if (mesh.scale.z > 5) {
     balloon = false;
     mesh.scale.z = defaultScaleZ;
     mesh.scale.x = defaultScaleX;
@@ -108,6 +109,10 @@ function setLighting() {
 
 // These are gridlines we add around the face.
 function drawGrids(color) {
+  if (line) {
+    scene.remove(line);
+  }
+
   let size = 60;
   let step = 4;
   let geometry = new THREE.Geometry();
@@ -153,39 +158,19 @@ function render() {
   requestAnimationFrame(render);
 };
 
-function setHat() {
-  let hat = new THREE.TorusGeometry(11, 1.5, 5, 50);
-  let material = new THREE.MeshPhongMaterial({
-    color: '#514ef6',
-    reflectivity: 20,
-    shininess: 16,
-    specular: '#f00'
-  });
-
-  let hatMesh;
-
-  for (let i = 0; i < 3; i++) {
-    hatMesh = new THREE.Mesh(hat, material);
-    hatMesh.rotation.x = -(Math.PI / 2);
-    hatMesh.rotation.y = -15;
-    hatMesh.position.y = 30 - (i * 5);
-    hatMesh.position.x = -i * 10;
-    scene.add(hatMesh);
-  }
-}
-
 exports.generate = function () {
   // We need to wait until the image loads so that we can apply it as a texture. The image path is
   // the path relative to the root of the project. In this case it would be the build/ directory.
-  let loader = new THREE.TextureLoader();
+  let loader = new STLLoader();
   let count = 0;
-  let imageArr = ['face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png'];
+  //let imageArr = ['face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png'];
+  let facesArr = ['face-default.stl', 'face-happy.stl', 'face-surprise.stl', 'face-sad.stl'];
 
   function preloadTextures(next) {
-    imageArr.forEach((img) => {
-      loader.load(img, function (texture) {
-        textures[img] = texture;
-        if (count === imageArr.length - 1) {
+    facesArr.forEach((face) => {
+      loader.load(face, function (geometry) {
+        textures[face] = geometry;
+        if (count === facesArr.length - 1) {
           return next(null, textures);
         }
 
@@ -201,9 +186,10 @@ exports.generate = function () {
     // This allows us to rotate around the objects and zoom in and out.
     controls = new OrbitControls(camera);
     controls.enableZoom = true;
-    controls.minDistance = 50;
+    controls.minDistance = 30;
     controls.maxDistance = 200;
     controls.autoRotate = false;
+
 
     renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -212,8 +198,7 @@ exports.generate = function () {
 
     document.body.appendChild(renderer.domElement);
 
-    setFace(textures['face1.png']);
-    setHat();
+    setFace(textures['face-default.stl']);
     setLighting();
     drawGrids();
 
@@ -224,31 +209,26 @@ exports.generate = function () {
 
 exports.startBallooning = function () {
   balloon = true;
-  setFace(textures['face2.png']);
+  setFace(textures['face-happy.stl']);
   startBalloon();
 };
 
 exports.setFace = function (mood) {
-  scene.remove(line);
   switch (mood) {
     case 'happy':
-      setFace(textures['face2.png']);
+      setFace(textures['face-happy.stl']);
       drawGrids('#ff6bd9');
       break;
     case 'sad':
-      setFace(textures['face3.png']);
+      setFace(textures['face-sad.stl']);
       drawGrids('#111');
       break;
-    case 'wink':
-      setFace(textures['face4.png']);
-      drawGrids();
-      break;
-    case 'tongue':
-      setFace(textures['face5.png']);
-      drawGrids('#56d2ff');
+    case 'surprise':
+      setFace(textures['face-surprise.stl']);
+      drawGrids('#0f0');
       break;
     default:
-      setFace(textures['face1.png']);
+      setFace(textures['face-default.stl']);
       drawGrids();
       break;
   }

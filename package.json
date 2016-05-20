@@ -30,6 +30,7 @@
     "socket.io": "^1.4.5",
     "three": "^0.76.1",
     "three-orbit-controls": "^72.0.0",
+    "three-stl-loader": "^1.0.4",
     "tween.js": "^16.3.4",
     "vision": "^4.1.0",
     "yar": "^7.0.0"
