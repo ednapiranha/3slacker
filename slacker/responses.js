@@ -16,6 +16,14 @@ exports.matchResponse = function (data, sockets, rtm) {
     return;
   }
 
+  if (data.text.match(/shots fired/ig)) {
+    let message = "BLAOOOW!";
+    sockets.emit('action', 'surprise');
+    sockets.emit('message', message);
+    rtm.sendMessage(message, data.channel);
+    return;
+  }
+
   if (data.text.match(/balloon$/gi)) {
     sockets.emit('action', 'balloon');
     return;
