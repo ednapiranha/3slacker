@@ -21,6 +21,4 @@ exports.setType = function (data, sockets) {
     sockets.emit('message', ':o');
     return;
   }
-
-  sockets.emit('action', 'default');
 };
