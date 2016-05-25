@@ -2,7 +2,7 @@
 
 const weather = require('./weather');
 
-exports.matchResponse = function (data, sockets, rtm) {
+exports.matchResponse = function (data, sockets, rtm, haiku) {
   if (data.text.match(/weather [0-9]+$/i)) {
     weather.getWeather(data, rtm, sockets);
     return;
@@ -26,6 +26,12 @@ exports.matchResponse = function (data, sockets, rtm) {
 
   if (data.text.match(/balloon$/gi)) {
     sockets.emit('action', 'balloon');
+    return;
+  }
+
+  if (data.text.match(/haiku$/gi)) {
+    let haikuMsg = haiku.generate();
+    rtm.sendMessage(haikuMsg.join('\n'), data.channel);
     return;
   }
 };

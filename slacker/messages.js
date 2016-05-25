@@ -4,6 +4,7 @@ const RtmClient = require('@slack/client').RtmClient;
 const RTM_CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const nconf = require('nconf');
+const Haiku = require('random-haiku');
 
 const reactions = require('./reactions');
 const responses = require('./responses');
@@ -17,9 +18,10 @@ let username;
 let sockets;
 let socket;
 let messageHistory = {};
+let haiku = new Haiku();
 
 function sendResponse(data) {
-  responses.matchResponse(data, sockets, rtm);
+  responses.matchResponse(data, sockets, rtm, haiku);
   reactions.setType(data, sockets);
 }
 
@@ -40,6 +42,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
     if (data.type === 'message' && data.text) {
+      haiku.addToDataset(sentence);
       sendResponse(data);
     }
 
