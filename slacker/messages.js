@@ -20,6 +20,15 @@ let socket;
 let messageHistory = {};
 let haiku = new Haiku();
 
+let sentence = 'appears doomed seems the it awful nerd alone runs walks smart dumb chair ' +
+               'sings considered a we seems appears they always tired amused ' +
+               'sadness joy shakes knows glitter blue green quickly superb she he ' +
+               'them bike dog car rainbow ' +
+               'briskly firmly swiftly really writing laughing eating dancing ' +
+               'forever never happy sad sleeping curious bored cat person it is';
+
+haiku.addToDataset(sentence);
+
 function sendResponse(data) {
   responses.matchResponse(data, sockets, rtm, haiku);
   reactions.setType(data, sockets);
@@ -42,7 +51,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
     if (data.type === 'message' && data.text) {
-      haiku.addToDataset(data.text, () => { });
+      haiku.addToDataset(data.text);
       sendResponse(data);
     }
 

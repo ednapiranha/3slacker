@@ -31,6 +31,8 @@ exports.matchResponse = function (data, sockets, rtm, haiku) {
 
   if (data.text.match(/haiku$/gi)) {
     let haikuMsg = haiku.generate();
+    sockets.emit('action', 'surprise');
+    sockets.emit('message', haikuMsg.join('\n'))
     rtm.sendMessage(haikuMsg.join('\n'), data.channel);
     return;
   }
