@@ -42,7 +42,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
     if (data.type === 'message' && data.text) {
-      haiku.addToDataset(data.text);
+      haiku.addToDataset(data.text, () => { });
       sendResponse(data);
     }
 
