@@ -41,7 +41,7 @@ exports.matchResponse = function (data, sockets, rtm, haiku) {
     return;
   }
 
-  if (data.text.match(/haiku$/gi)) {
+  if (data.text.match(/haiku/gi)) {
     let haikuMsg = haiku.generate().join('\n');
     sockets.emit('action', 'surprise');
     sockets.emit('message', haikuMsg)
