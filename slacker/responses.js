@@ -1,6 +1,18 @@
 'use strict';
 
+const nconf = require('nconf');
+const Twitter = require('twitter');
+
 const weather = require('./weather');
+
+nconf.argv().env().file({ file: 'config.json' });
+
+const client = new Twitter({
+  consumer_key: nconf.get('twitterConsumerKey'),
+  consumer_secret: nconf.get('twitterConsumerSecret'),
+  access_token_key: nconf.get('twitterAccessToken'),
+  access_token_secret: nconf.get('twitterAccessSecret')
+});
 
 exports.matchResponse = function (data, sockets, rtm, haiku) {
   if (data.text.match(/weather [0-9]+$/i)) {
@@ -30,10 +42,18 @@ exports.matchResponse = function (data, sockets, rtm, haiku) {
   }
 
   if (data.text.match(/haiku$/gi)) {
-    let haikuMsg = haiku.generate();
+    let haikuMsg = haiku.generate().join('\n');
     sockets.emit('action', 'surprise');
-    sockets.emit('message', haikuMsg.join('\n'))
-    rtm.sendMessage(haikuMsg.join('\n'), data.channel);
+    sockets.emit('message', haikuMsg)
+    client.post('statuses/update', {
+      status: haikuMsg
+    }, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    rtm.sendMessage(haikuMsg, data.channel);
     return;
   }
 };

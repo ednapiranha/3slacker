@@ -4,5 +4,10 @@
     "analytics": false,
     "externalDomain": "http://localhost:3000",
     "slackKey": "",
-    "openWeatherKey": ""
+    "openWeatherKey": "",
+    "twitterConsumerKey": "",
+    "twitterConsumerSecret": "",
+    "twitterAccessToken": "",
+    "twitterAccessSecret": "",
+    "db": ""
 }
