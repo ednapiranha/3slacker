@@ -60,6 +60,16 @@ exports.init = function (io, sck) {
   rtm.start();
 };
 
+function saveDataset(dataset) {
+  let keyWords = [];
+  for (let k in dataset) {
+    for (let j in dataset[k]) {
+      keyWords.push(j);
+    }
+  }
+  db.put('dataset', keyWords.join(' '));
+}
+
 rtm.on(RTM_CLIENT_EVENTS.RTM.AUTHENTICATED, (data) => {
   uid = data.self.id;
   username = data.self.name;
@@ -73,7 +83,7 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
     if (data.type === 'message' && data.text) {
       haiku.addToDataset(data.text, (err, dataset) => {
         if (dataset) {
-          db.put('dataset', dataset);
+          saveDataset(dataset);
         }
       });
       sendResponse(data);
