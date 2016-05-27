@@ -44,7 +44,6 @@ db.get('dataset', (err, data) => {
       }
     });
   } else {
-    console.log(data)
     haiku.addToDataset(data, (err) => {
       if (err) {
         console.log(err);
