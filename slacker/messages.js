@@ -6,6 +6,9 @@ const RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 const nconf = require('nconf');
 const Haiku = require('random-haiku');
 const level = require('level');
+const Filter = require('bad-words');
+
+let customFilter = new Filter({ placeHolder: ' '});
 
 const reactions = require('./reactions');
 const responses = require('./responses');
@@ -41,6 +44,7 @@ db.get('dataset', (err, data) => {
       }
     });
   } else {
+    console.log(data)
     haiku.addToDataset(data, (err) => {
       if (err) {
         console.log(err);
@@ -50,7 +54,7 @@ db.get('dataset', (err, data) => {
 });
 
 function sendResponse(data) {
-  responses.matchResponse(data, sockets, rtm, haiku);
+  responses.matchResponse(data, sockets, rtm, haiku, db);
   reactions.setType(data, sockets);
 }
 
@@ -81,7 +85,9 @@ rtm.on(RTM_EVENTS.MESSAGE, (data) => {
   if (!messageHistory[data.ts]) {
     messageHistory[data.ts] = data;
     if (data.type === 'message' && data.text) {
-      haiku.addToDataset(data.text, (err, dataset) => {
+      let cleaned = customFilter.clean(data.text);
+
+      haiku.addToDataset(cleaned, (err, dataset) => {
         if (dataset) {
           saveDataset(dataset);
         }

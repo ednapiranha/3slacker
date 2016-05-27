@@ -14,7 +14,7 @@ const client = new Twitter({
   access_token_secret: nconf.get('twitterAccessSecret')
 });
 
-exports.matchResponse = function (data, sockets, rtm, haiku) {
+exports.matchResponse = function (data, sockets, rtm, haiku, db) {
   if (data.text.match(/weather [0-9]+$/i)) {
     weather.getWeather(data, rtm, sockets);
     return;
@@ -41,10 +41,19 @@ exports.matchResponse = function (data, sockets, rtm, haiku) {
     return;
   }
 
+  if (data.text.match(/\!del\s\w{1,3}\s\w+$/i)) {
+    let command = data.text.split('!del ');
+    let commands = command[1].split(' ');
+    let category = commands[0];
+    let word = commands[1];
+    console.log(category, word)
+    db.put('dataset', haiku.del(category, word));
+  }
+
   if (data.text.match(/haiku/gi)) {
     let haikuMsg = haiku.generate().join('\n');
     sockets.emit('action', 'surprise');
-    sockets.emit('message', haikuMsg)
+    sockets.emit('message', haikuMsg);
     client.post('statuses/update', {
       status: haikuMsg
     }, (err) => {
