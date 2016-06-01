@@ -2,6 +2,8 @@
 
 const nconf = require('nconf');
 const Twitter = require('twitter');
+const request = require('request');
+const qs = require('querystring');
 
 const weather = require('./weather');
 
@@ -39,6 +41,33 @@ exports.matchResponse = function (data, sockets, rtm, haiku, db) {
   if (data.text.match(/balloon$/gi)) {
     sockets.emit('action', 'balloon');
     return;
+  }
+
+  if (data.text.match(/domain: <\w{4,}:\/\/\w{1,}\.\w{2,}\|\w{1,}\.\w{2,}>$/i)) {
+    let domain = data.text.split('domain: ')[1].split('|')[1].split('>')[0];
+
+    let opts = {
+      url: 'https://jsonwhois.com/api/v1/whois?' + qs.stringify({
+        domain: domain
+      }),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Token token=' + nconf.get('jsonWhoisToken')
+      }
+    }
+
+    request(opts, (err, resp, body) => {
+      if (err || resp.statusCode !== 200) {
+        rtm.sendMessage('Could not get domain status', data.channel);
+        return;
+      }
+
+      body = JSON.parse(body);
+
+      let info = 'Domain: ' + body.domain + ' | Available: ' + body['available?'];
+
+      rtm.sendMessage(info, data.channel);
+    });
   }
 
   if (data.text.match(/\!del\s\w{1,3}\s\w+$/i)) {

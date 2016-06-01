@@ -9,5 +9,6 @@
     "twitterConsumerSecret": "",
     "twitterAccessToken": "",
     "twitterAccessSecret": "",
+    "jsonWhoisToken": "",
     "db": ""
 }
