@@ -43,7 +43,8 @@ exports.matchResponse = function (data, sockets, rtm, haiku, db) {
     return;
   }
 
-  if (data.text.match(/domain: <\w{4,}:\/\/\w{1,}\.\w{2,}\|\w{1,}\.\w{2,}>$/i)) {
+  if (data.text.match(/domain: <\w{4,}:\/\/\w{1,}\.\w{2,}\|\w{1,}\.\w{2,}>$/i) ||
+      data.text.match(/domain: \w{1,}\.\w{2,}$/i)) {
     let domain = data.text.split('domain: ')[1].split('|')[1].split('>')[0];
 
     let opts = {
