@@ -16,7 +16,20 @@ const client = new Twitter({
   access_token_secret: nconf.get('twitterAccessSecret')
 });
 
-exports.matchResponse = function (data, sockets, rtm, haiku, db) {
+exports.matchResponse = function (data, sockets, rtm, haiku, db, uid) {
+  if (data.text.match(/^3slacker/gi) || data.text.indexOf('@' + uid) > -1) {
+    if (data.text.match(/llkittens$/i)) {
+      let msg = haiku.generate()[1];
+      client.post('statuses/update', {
+        status: '@llkittens ' + msg
+      }, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  }
+
   if (data.text.match(/weather [0-9]+$/i)) {
     weather.getWeather(data, rtm, sockets);
     return;

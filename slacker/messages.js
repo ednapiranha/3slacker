@@ -53,7 +53,7 @@ db.get('dataset', (err, data) => {
 });
 
 function sendResponse(data) {
-  responses.matchResponse(data, sockets, rtm, haiku, db);
+  responses.matchResponse(data, sockets, rtm, haiku, db, uid);
   reactions.setType(data, sockets);
 }
 
