@@ -24,8 +24,10 @@ exports.matchResponse = function (data, sockets, rtm, haiku, db, uid) {
         status: '@llkittens ' + msg
       }, (err) => {
         if (err) {
-          console.log(err);
+          return console.log(err);
         }
+
+        rtm.sendMessage('Sent the following to llkittens: "' + msg + '"', data.channel);
       });
     }
   }
